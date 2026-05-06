@@ -1,6 +1,11 @@
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Optional
+from datetime import datetime
 
+
+# =========================
+# REQUESTS
+# =========================
 
 class RecipeRequest(BaseModel):
     url: str
@@ -9,6 +14,10 @@ class RecipeRequest(BaseModel):
 class MealPlannerRequest(BaseModel):
     recipe_ids: List[int]
 
+
+# =========================
+# RECIPE STRUCTURE
+# =========================
 
 class Ingredient(BaseModel):
     quantity: Optional[str] = ""
@@ -29,7 +38,7 @@ class ShoppingList(BaseModel):
     pantry: List[str] = []
 
 
-class RecipeResponse(BaseModel):
+class RecipeData(BaseModel):
     title: str
     cuisine: str
     prep_time: str
@@ -49,3 +58,20 @@ class RecipeResponse(BaseModel):
     shopping_list: ShoppingList
 
     related_recipes: List[str]
+
+
+# =========================
+# DATABASE RESPONSE
+# =========================
+
+class RecipeDBResponse(BaseModel):
+    id: int
+    url: str
+    title: str
+    cuisine: str
+    difficulty: str
+    data: dict
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
