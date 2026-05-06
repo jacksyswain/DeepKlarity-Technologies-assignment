@@ -19,10 +19,14 @@ def scrape_recipe(url: str):
 
     response.raise_for_status()
 
-    soup = BeautifulSoup(response.text, "lxml")
+    raw_html = response.text
 
-    # remove useless tags
-    for tag in soup(["script", "style", "noscript"]):
+    soup = BeautifulSoup(raw_html, "lxml")
+
+    # remove unwanted tags
+    for tag in soup(
+        ["script", "style", "noscript"]
+    ):
         tag.extract()
 
     title = soup.title.string if soup.title else ""
@@ -32,7 +36,9 @@ def scrape_recipe(url: str):
         strip=True
     )
 
-    cleaned_text = " ".join(text.split())
+    cleaned_text = " ".join(
+        text.split()
+    )
 
     final_content = f"""
     PAGE TITLE:
@@ -42,4 +48,7 @@ def scrape_recipe(url: str):
     {cleaned_text}
     """
 
-    return final_content[:20000]
+    return {
+        "content": final_content[:20000],
+        "raw_html": raw_html
+    }
